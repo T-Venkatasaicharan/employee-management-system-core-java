@@ -1,1 +1,1 @@
-This is a basic core Java Employee Management System 
+This is a core Java Employee Management System 
