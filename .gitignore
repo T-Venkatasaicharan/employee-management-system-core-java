@@ -1,0 +1,10 @@
+# Compiled Java files
+*.class
+# Eclipse / IDE Files
+.project
+.classpath
+.settings/
+# Compiled output
+bin/
+# OS files
+.DS_Store
