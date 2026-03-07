@@ -1,7 +1,12 @@
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Scanner;
 public class EmployeeManagementApp {
-	static ArrayList<Employee> employees = new ArrayList<>();
+	//static ArrayList<Employee> employees = new ArrayList<>();
 	static Scanner sc = new Scanner(System.in);
 	public static void main(String[] args) {
 		while(true) {
@@ -27,51 +32,77 @@ public class EmployeeManagementApp {
 		}
 	}
 	static void addEmployee() {
-		System.out.print("Enter ID: ");
-		int id = sc.nextInt();
-		for (Employee e : employees) {
-			if(e.getId() == id) {
-				System.out.println("Employee ID already exists!");
-				return;
-			}
+		try {
+			System.out.print("Enter ID: ");
+			int id = sc.nextInt();
+			System.out.print("Enter Name: " );
+			String name = sc.next();
+			System.out.print("Enter Salary: " );
+			double salary = sc.nextDouble();
+			Connection con = DBConnection.getConnection();
+			String query = "INSERT INTO employees(id,name,salary) VALUES(?,?,?)";
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setInt(1, id);
+			ps.setString(2, name);
+			ps.setDouble(3, salary);
+			ps.executeUpdate();
+			System.out.println("Employee added sucessfully");
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
-		System.out.print("Enter Name: ");
-		String name = sc.next();
-		System.out.println("Enter Salary:");
-		double salary = sc.nextDouble();
-		employees.add(new Employee(id, name, salary));
-		System.out.println("Employee added sucessfully");
 	}
 	static void viewEmployees() {
-		if(employees.isEmpty()) {
-			System.out.println("No employees found");
-			return;
+		try {
+			Connection con = DBConnection.getConnection();
+			String query = "SELECT * FROM employees";
+			Statement st = con.createStatement();
+			ResultSet rs = st.executeQuery(query);
+			while(rs.next()) {
+				System.out.println(
+						rs.getInt("id") + " "
+						+ rs.getString("name") + " "
+						+rs.getDouble("salary")
+						);
+			}
+			}catch(Exception e) {
+				e.printStackTrace();
 		}
-		for (Employee e : employees) {
-			System.out.println(e);
+	}
+	static void deleteEmployee() {
+		try {
+			System.out.print("Enter ID: ");
+			int id = sc.nextInt();
+			Connection con = DBConnection.getConnection();
+			String query = "DELETE FROM employees WHERE id = ?";
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setInt(1, id);
+			ps.executeUpdate();
+			System.out.println("Employee Deleted");
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 	static void searchEmployee() {
-		System.out.print("Enter ID: ");
-		int id = sc.nextInt();
-		for (Employee e : employees) {
-			if(e.getId() == id) {
-				System.out.println(e);
-				return;
+		try {
+			System.out.print("Enter ID: " );
+			int id= sc.nextInt();
+			Connection con = DBConnection.getConnection();
+			String query = "SELECT * FROM employees WHERE id = ?";
+			PreparedStatement ps = con.prepareStatement(query);
+			ps.setInt(1, id);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				System.out.println(
+						rs.getInt("id") + " "
+						+ rs.getString("name")+ " "
+						+ rs.getDouble("salary")
+						);
+				
+			}else {
+				System.out.println("Employee not found");
 			}
+		}catch(Exception e) {
+			e.printStackTrace();
 		}
-		System.out.println("Employee not found");
-	}
-	static void deleteEmployee() {
-		System.out.print("Enter ID: ");
-		int id = sc.nextInt();
-		for(Employee e : employees) {
-			if(e.getId() == id) {
-				employees.remove(e);
-				System.out.println("Employee deleted");
-				return;
-			}
-		}
-		System.out.println("Employee not found");
 	}
 }
