@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 public class EmployeeManagementApp {
 	//static ArrayList<Employee> employees = new ArrayList<>();
+	//Next update from the Array List console to DataBase connection
 	static Scanner sc = new Scanner(System.in);
 	public static void main(String[] args) {
 		while(true) {
