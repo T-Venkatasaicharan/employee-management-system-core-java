@@ -1,1 +1,1 @@
-This is a core Java Employee Management System 
+This is Employee Management System which is developed by uising java. It will store the employee data in the database.
